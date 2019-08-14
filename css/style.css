@@ -38,6 +38,7 @@ h1 {
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
+    padding-right: 25px;
 }
 
 .avatar {
@@ -59,13 +60,18 @@ h1 {
     font-weight: bold;
     color: #404a51;
     margin: 5px 0;
+    text-transform: capitalize;
 }
 
 .email, .location {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: regular;
     color: #888e92;
     margin: 5px 0;
+}
+
+.location {
+    text-transform: capitalize;
 }
 
 @media (min-width: 768px) {
