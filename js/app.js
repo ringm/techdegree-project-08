@@ -1,10 +1,15 @@
+//------------------------------
+//VARIABLES
+//------------------------------
+
 const directory = document.querySelector('.directory');
+const employee = document.querySelector('.directory__item');
 
 //------------------------------
 //FETCH REQUESTS
 //------------------------------
 
-fetch('https://randomuser.me/api/?results=12')
+fetch('https://randomuser.me/api/?results=12&&nat=us,ca,gb')
     .then(response => response.json())
     .then(data => data.results)
     .then(results => results.forEach(result => generateEmployee(result)))
@@ -27,3 +32,8 @@ function generateEmployee(data) {
     li.innerHTML = html;
     directory.appendChild(li);
 }
+
+//------------------------------
+//EVENT LISTENERS
+//------------------------------
+

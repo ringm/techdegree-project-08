@@ -23,26 +23,26 @@ h1 {
 
 .directory {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    flex-direction: column;
 }
 
 .directory__item {
     border-radius: 10px;
     border: 2px solid #dfdfdf;
     width: 100%;
-    height: 185px;
     margin-bottom: 35px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     padding-right: 25px;
+    padding-top: 25px;
+    padding-bottom: 25px;
 }
 
 .avatar {
     margin-left: 25px;
+    margin-bottom: 15px;
     border-radius: 50%;
     height: 130px;
 }
@@ -52,7 +52,9 @@ h1 {
     margin-left: 25px;
     display: flex;
     flex-direction: column;
-    align-content: flex-start;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
 }
 
 .name {
@@ -74,14 +76,50 @@ h1 {
     text-transform: capitalize;
 }
 
+/*----------------------------------------------
+MODAL WINDOW
+-----------------------------------------------*/
+
+.overlay {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: .6;
+    z-index: 1;
+}
+
+/*----------------------------------------------
+MEDIA QUERIES
+-----------------------------------------------*/
+
 @media (min-width: 768px) {
+    .directory {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
     .directory__item {
         width: 48%;
+        align-items: center;
+    }
+    .employee-data {
+        margin-left: 25px;
+        display: flex;
+        flex-direction: column;
+        align-content: flex-start;
     }
 }
 
 @media (min-width: 1100px) {
     .directory__item {
         width: 31%;
+        height: 185px;
+        flex-direction: row;
+    }
+    .avatar {
+        margin-bottom: 0;
+    }
+    .employee-data {
+        text-align: start;
     }
 }
