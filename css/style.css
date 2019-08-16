@@ -41,6 +41,12 @@ h1 {
     justify-content: center;
     padding: 25px;
     cursor:pointer;
+    transition: .2s;
+}
+
+.directory__item:hover {
+    box-shadow: 0px 3px 7px -1px rgba(0,0,0,0.34);
+    transition: .4s;
 }
 
 .avatar {
@@ -50,7 +56,27 @@ h1 {
 }
 
 .employee-basic-info {
-    margin-left: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+}
+
+.employee-detail-info {
+    margin-top: 5px;
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dfdfdf;
+}
+
+.employee-additional-info {
+    padding-top: 15px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -113,6 +139,22 @@ MODAL WINDOW
   cursor:pointer;
 }
 
+.icon-back {
+    height: 15px;
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    cursor:pointer;
+}
+
+.icon-next {
+    height: 15px;
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    cursor:pointer;
+}
+
 .hidden {
   display: none;
 }
@@ -132,7 +174,6 @@ MEDIA QUERIES
         align-items: center;
     }
     .employee-basic-info {
-        margin-left: 25px;
         display: flex;
         flex-direction: column;
         align-content: flex-start;
@@ -149,6 +190,7 @@ MEDIA QUERIES
         margin-bottom: 0;
     }
     .employee-basic-info {
+        margin-left: 25px;
         text-align: start;
     }
 }
