@@ -9,12 +9,14 @@ const closeIcon = document.querySelector('.icon-close')
 const employees = [];
 let employeeId = 0;
 let currentEmployee = 0;
+const input = document.getElementById("search");
+const noResultMsg = document.getElementById("no-results");
 
 //------------------------------
 //FETCH REQUESTS
 //------------------------------
 
-fetch('https://randomuser.me/api/?results=12&&nat=us,ca,gb&inc=picture,name,email,location,phone,dob&noinfo')
+fetch('https://randomuser.me/api/?results=12&&nat=us,ca,gb&inc=picture,name,email,location,phone,dob,login&noinfo')
     .then(response => response.json())
     .then(data => data.results)
     .then(results => results.forEach(result => generateEmployee(result)))
@@ -24,11 +26,11 @@ fetch('https://randomuser.me/api/?results=12&&nat=us,ca,gb&inc=picture,name,emai
 //------------------------------
 
 function generateEmployee(data) {
-    
+
     const li = document.createElement("li");
     li.className = "directory__item";
     li.setAttribute('id', employeeId);
-    employeeId += 1;
+    employeeId ++;
 
     const basicInfo = `
       <img class='avatar' src="${data.picture.large}" alt="${data.name.first} ${data.name.last}">
@@ -50,11 +52,16 @@ function generateEmployeeDetails(employee, index) {
     const div = document.createElement('div');
     div.className = 'window';
     const bday = new Date(employee[index].dob.date);
-
+    let arrows = "";
+    if(employees.length > 1) {
+    arrows = `
+        <img class='icon-back' src="icons/icon-back.svg" alt="back-icon">
+        <img class='icon-next' src="icons/icon-next.svg" alt="next-icon">
+      `;
+    }
     const html = `
+      ${arrows}
       <img class='icon-close' src="icons/icon-close.svg" alt="close-icon">
-      <img class='icon-back' src="icons/icon-back.svg" alt="back-icon">
-      <img class='icon-next' src="icons/icon-next.svg" alt="next-icon">
       <img class='avatar' src="${employee[index].picture.large}" alt="${employee[index].name.first} ${employee[index].name.last}">
       <div class='employee-detail-info'>
         <p class='employee-name capitalize'>${employee[index].name.first} ${employee[index].name.last}</p>
@@ -63,7 +70,7 @@ function generateEmployeeDetails(employee, index) {
       </div>
       <div class='employee-additional-info'>
         <p class='employee-data'>${employee[index].phone}</p>
-        <p class='employee-data capitalize'>${employee[index].location.street}, ${employee[index].location.postcode}</p>
+        <p class='employee-data capitalize'>${employee[index].location.street}, ${employee[index].location.state} ${employee[index].location.postcode}</p>
         <p class='employee-data'>Birthday: ${bday.getDate()}/${bday.getMonth()+1}/${bday.getFullYear()}</p>
       </div>
     `;
@@ -71,6 +78,25 @@ function generateEmployeeDetails(employee, index) {
     div.innerHTML = html;
     overlay.appendChild(div);
 }
+
+function nextEmployee(index) {
+  const bday = new Date(employees[index].dob.date);
+  const avatar = document.querySelector('.window .avatar');
+  const employeeName = document.querySelector('.employee-detail-info').childNodes[1];
+  const employeeEmail = document.querySelector('.employee-detail-info').childNodes[3];
+  const employeeCity = document.querySelector('.employee-detail-info').childNodes[5];
+  const employeePhone = document.querySelector('.employee-additional-info').childNodes[1];
+  const employeeStreet = document.querySelector('.employee-additional-info').childNodes[3];
+  const employeeBday = document.querySelector('.employee-additional-info').childNodes[5];
+
+  avatar.src = `${employees[index].picture.large}`;
+  employeeName.textContent = `${employees[index].name.first} ${employees[index].name.last}`;
+  employeeEmail.textContent = `${employees[index].email}`;
+  employeeCity.textContent = `${employees[index].location.city}`;
+  employeePhone.textContent = `${employees[index].phone}`;
+  employeeStreet.textContent = `${employees[index].location.street}, ${employees[index].location.state} ${employees[index].location.postcode}`;
+  employeeBday.textContent = `Birthday: ${bday.getDate()}/${bday.getMonth()+1}/${bday.getFullYear()}`;
+};
 
 //------------------------------
 //EVENT LISTENERS
@@ -82,7 +108,7 @@ directory.addEventListener('click', e => {
     generateEmployeeDetails(employees, e.target.id);
     currentEmployee = e.target.id;
   }
-})
+});
 
 overlay.addEventListener('click', e => {
   if(e.target.className == 'icon-close') {
@@ -90,23 +116,47 @@ overlay.addEventListener('click', e => {
     const div = document.querySelector('.window');
     overlay.removeChild(div);
   } else if(e.target.className == 'icon-next') {
-      employeeId += 1;
-      const bday = new Date(employees[1].dob.date);
-      const avatar = document.querySelector('.window .avatar');
-      const employeeName = document.querySelector('.employee-detail-info').childNodes[1];
-      const employeeEmail = document.querySelector('.employee-detail-info').childNodes[3];
-      const employeeCity = document.querySelector('.employee-detail-info').childNodes[5];
-      const employeePhone = document.querySelector('.employee-additional-info').childNodes[1];
-      const employeeStreet = document.querySelector('.employee-additional-info').childNodes[3];
-      const employeeBday = document.querySelector('.employee-additional-info').childNodes[5];
-      avatar.src = `${employees[1].picture.large}`;
-      employeeName.textContent = `${employees[1].name.first} ${employees[1].name.last}`;
-      employeeEmail.textContent = `${employees[1].email}`;
-      employeeCity.textContent = `${employees[1].location.city}`;
-      employeePhone.textContent = `${employees[1].phone}`;
-      employeeStreet.textContent = `${employees[1].location.street}, ${employees[1].location.postcode}`;
-      employeeStreet.Bday = `${bday.getDate()}/${bday.getMonth()+1}/${bday.getFullYear()}`;
+      if(currentEmployee < employees.length -1) {
+        currentEmployee ++;
+        nextEmployee(currentEmployee);
+      }
+  } else if(e.target.className == 'icon-back'){
+      if(currentEmployee > 0) {
+        currentEmployee --;
+        nextEmployee(currentEmployee);
+      }
+  }
+});
+
+input.addEventListener("input", () => {
+  //stores search input
+  const inputValue = input.value.toLowerCase();
+  //stores all 'li' elements in the employee directory
+  const searchList = document.querySelectorAll(".directory li");
+  //counts how many elements are being hidden
+  let k = 0;
+  //create array of employee names
+  const firstName = employees.map(data => data.name.first);
+  //create array of employee last name
+  const lastName = employees.map(data => data.name.last);
+  //create array of employee username
+  const username =  employees.map(data => data.login.username);
+
+  for(let i=0; i < searchList.length; i++) {
+    //compares name and username against user input
+    if(firstName[i].indexOf(inputValue) && lastName[i].indexOf(inputValue) && username[i].indexOf(inputValue) == -1) {
+      //if there's no match, hides the element
+      searchList[i].classList.add("hidden");
+      k++;
+    } else {
+      //removes the 'hide' class so the element shows
+      searchList[i].classList.remove("hidden");
+    }
   }
 
+  //if all the elements are hidden, the 'no results' msg shows
+  if(k == searchList.length) {
+    noResultMsg.classList.remove("hidden");
+  } else { noResultMsg.classList.add("hidden"); }
 
-})
+});
