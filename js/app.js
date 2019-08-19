@@ -5,7 +5,7 @@
 const directory = document.querySelector('.directory');
 const employeeList = document.querySelectorAll('.employee-list');
 const overlay = document.querySelector('.overlay');
-const closeIcon = document.querySelector('.icon-close')
+const closeIcon = document.querySelector('.icon-close');
 const employees = [];
 let employeeId = 0;
 let currentEmployee = 0;
@@ -17,13 +17,23 @@ const noResultMsg = document.getElementById("no-results");
 //------------------------------
 
 fetch('https://randomuser.me/api/?results=12&&nat=us,ca,gb&inc=picture,name,email,location,phone,dob,login&noinfo')
+    .then(checkStatus)
     .then(response => response.json())
     .then(data => data.results)
     .then(results => results.forEach(result => generateEmployee(result)))
+    .catch(error => console.log('Looks like there was an error with your request :(', error));
 
 //------------------------------
 //HELPER FUNCTIONS
 //------------------------------
+
+function checkStatus(response) {
+  if(response.ok) {
+    return Promise.resolve(response);
+  } else { 
+    Promise.reject(new Error(response.statusText));  
+  }
+}
 
 function generateEmployee(data) {
 
@@ -96,7 +106,7 @@ function nextEmployee(index) {
   employeePhone.textContent = `${employees[index].phone}`;
   employeeStreet.textContent = `${employees[index].location.street}, ${employees[index].location.state} ${employees[index].location.postcode}`;
   employeeBday.textContent = `Birthday: ${bday.getDate()}/${bday.getMonth()+1}/${bday.getFullYear()}`;
-};
+}
 
 //------------------------------
 //EVENT LISTENERS
